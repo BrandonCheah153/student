@@ -34,7 +34,7 @@ Hi! My name is Brandon.
 <a href="https://vscode.dev/" class="button small" style="background-color: #d38a4bff">
     <span style="color: #FFFFFF">VSCODE</span>
 </a>
-<button>Super Button</button>
+
 <br>
 
 ### Class Progress
@@ -44,6 +44,9 @@ Hi! My name is Brandon.
 </a>
 <a href="{{site.baseurl}}/turtle" class="button small" style="background-color: #2A7DB1">
     <span style="color: #000000">Turtle</span>
+</a>
+<a href="https://www.amazon.com/" class="button small" style="backround-color: #989421ff">
+    <span style="color: #e75c5cff">Turtle</span>
 </a>
 
 <br>

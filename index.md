@@ -45,11 +45,10 @@ Hi! My name is Brandon.
 <a href="{{site.baseurl}}/turtle" class="button small" style="background-color: #2A7DB1">
     <span style="color: #000000">Turtle</span>
 </a>
-<a href="https://amazon.com/" class="button small" style="background-color: #cdd40dff">
-    <span style="color: #a06114ff">Turtle</span>
+<a href="https://amazon.com/" class="button small" style="background-color: #f8c019ff">
+    <span style="color: #9a5d13ff">Amazon</span>
 </a>
-
-<input type="image" alt="Dog or Cat?" src="dog.png">
+<img src="dog.png">
 
 <br>
 

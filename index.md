@@ -48,7 +48,7 @@ Hi! My name is Brandon.
 <a href="https://amazon.com/" class="button small" style="background-color: #f8c019ff">
     <span style="color: #9a5d13ff">Amazon</span>
 </a>
-<img src="dog.png">
+<img src="images/dog.png">
 
 <br>
 

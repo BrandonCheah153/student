@@ -191,11 +191,11 @@ Everything for me, as for many others, revolves around family and goals.
 Gallery of Pics, scroll to the right for more ...
 </comment>
 <div class="image-gallery">
-  <img src="{{site.baseurl}}/images/about/missionary.jpg" alt="Image 1">
-  <img src="{{site.baseurl}}/images/about/john_tamara.jpg" alt="Image 2">
-  <img src="{{site.baseurl}}/images/about/tamara_fam.jpg" alt="Image 3">
-  <img src="{{site.baseurl}}/images/about/surf.jpg" alt="Image 4">
-  <img src="{{site.baseurl}}/images/about/john_lora.jpg" alt="Image 5">
+  <img src="{{site.baseurl}}/images/dog.png" alt="Image 1">
+  <img src="{{site.baseurl}}/images/about/earings.png" alt="Image 2">
+  <img src="{{site.baseurl}}/images/about/grapes.png" alt="Image 3">
+  <img src="{{site.baseurl}}/images/about/griaffe.png" alt="Image 4">
+  <img src="{{site.baseurl}}/images/about/parrot.png" alt="Image 5">
   <img src="{{site.baseurl}}/images/about/lora_fam.jpg" alt="Image 6">
   <img src="{{site.baseurl}}/images/about/lora_fam2.jpg" alt="Image 7">
   <img src="{{site.baseurl}}/images/about/pj_party.jpg" alt="Image 8">

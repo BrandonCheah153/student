@@ -5,6 +5,25 @@ permalink: /about/
 comments: true
 ---
 
+<style>
+  /* Animated gradient background */
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(-60deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+    background-size: 600% 600%;
+    animation: waveGradient 18s ease infinite;
+  }
+  .page, .page-content, .post, .post-content { background: transparent !important; }
+
+  @keyframes waveGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+
 ## As a conversation Starter
 
 Here are some places I am from.

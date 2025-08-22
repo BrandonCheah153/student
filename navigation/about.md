@@ -7,7 +7,7 @@ comments: true
 
 ## As a conversation Starter
 
-Here are some places I have lived.
+Here are some places I am from.
 
 <comment>
 Flags are made using Wikipedia images
@@ -46,6 +46,7 @@ Flags are made using Wikipedia images
         object-fit: cover;
         border-radius: 5px;
     }
+    
 </style>
 
 <!-- This grid_container class is used by CSS styling and the id is used by JavaScript connection -->
@@ -60,10 +61,10 @@ Flags are made using Wikipedia images
     // 2. Define a JavaScript object for our http source and our data rows for the Living in the World grid
     var http_source = "https://upload.wikimedia.org/wikipedia/commons/";
     var living_in_the_world = [
-        {"flag": "0/01/Flag_of_California.svg", "greeting": "Hey", "description": "California - forever"},
-        {"flag": "b/b9/Flag_of_Oregon.svg", "greeting": "Hi", "description": "Oregon - 9 years"},
-        {"flag": "b/be/Flag_of_England.svg", "greeting": "Alright mate", "description": "England - 2 years"},
-        {"flag": "e/ef/Flag_of_Hawaii.svg", "greeting": "Aloha", "description": "Hawaii - 2 years"},
+        {"flag": "0/01/Flag_of_California.svg", "greeting": "Hey", "description": "California - since birth"},
+        {"flag": "2/21/Flag_of_Vietnam.svg", "greeting": "CHÀO", "description": "ethnic background"},
+        {"flag": "c/c3/Flag_of_France.svg", "greeting": "Salut", "description": "ethnic background"},
+        {"flag": "9/9f/Flag_of_Indonesia.svg", "greeting": "Hai", "description": "ethnic background"},
     ];
 
     // 3a. Consider how to update style count for size of container
@@ -97,6 +98,74 @@ Flags are made using Wikipedia images
     }
 </script>
 
+<!-- Pinned Plane Section -->
+<section class="plane-stage">
+  <div class="plane-pin">
+    <!-- use the one you actually have: download.jpg OR download.png -->
+    <img id="plane-img" src="{{site.baseurl}}/images/about/download.png" alt="Plane">
+  </div>
+</section>
+
+<style>
+  .plane-stage {
+    height: 200vh;        /* length of the “paused” section */
+  }
+  .plane-pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;        /* full screen while pinned */
+    overflow: hidden;     /* hides edges as plane exits */
+    background: transparent;
+    z-index: 1;
+  }
+  #plane-img {
+    position: absolute;   /* positioned inside the pinned box */
+    left: 0;
+    top: 0;
+    width: 120px;         /* tweak size as you like */
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25)); /* no blur for sharpness */
+    z-index: 2;
+  }
+</style>
+
+<!-- Plane Scroll Script (targets plane-img only) -->
+<script>
+(function(){
+  var plane = document.getElementById('plane-img');
+  var stage = document.querySelector('.plane-stage');
+  if(!plane || !stage) return;
+
+  function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+  function updatePlane(){
+    var rect = stage.getBoundingClientRect();
+    var viewportH = window.innerHeight || document.documentElement.clientHeight;
+    var stageHeight = stage.offsetHeight;
+    var scrollable = Math.max(1, stageHeight - viewportH);
+
+    // Progress 0..1 while the pinned section is active
+    var passed = -rect.top;
+    var p = clamp(passed / scrollable, 0, 1);
+
+    // Flight path (viewport units keep it aligned to screen)
+    var x = 2 + 96 * p;                        // 2vw -> ~98vw
+    var y = 22 + (-8 * Math.sin(p * Math.PI)); // lower baseline + bob
+    var rot = -8 + 16 * p;
+
+    plane.style.transform =
+      'translate(' + x + 'vw,' + y + 'vh) rotate(' + rot + 'deg)';
+  }
+
+  updatePlane();
+  window.addEventListener('scroll', updatePlane, {passive:true});
+  window.addEventListener('resize', updatePlane);
+})();
+</script>
+
+
+
 ### Journey through Life
 
 Here is what I did at those places
@@ -104,11 +173,11 @@ Here is what I did at those places
 - 🏫 I went to D39 elementary school in San Diego California.
 - 🏫 Middle and High School in San Diego California, curent senior and graduating class of 2026.
 - 🎓 Plays varsity tennis but also helps coach middle school kids.
--On the robotics team, usually in charge of coding the sensors.
--Attends Key Club meetings but mostly for the community service hours.
--Always the one who explains homework problems to friends right before the test.
--Eats lunch in the library sometimes to finish work.
--Has a small but close group of friends who play Mario Kart after school.
+- On the robotics team, usually in charge of coding the sensors.
+- Attends Key Club meetings but mostly for the community service hours.
+- Always the one who explains homework problems to friends right before the test.
+- Eats lunch in the library sometimes to finish work.
+- Has a small but close group of friends who play Mario Kart after school.
 
 ### Culture, Family, and Fun
 

@@ -1,9 +1,9 @@
 ---
-layout: opencs
+layout: base
 title: Background with Object
 description: Use JavaScript to have an in motion background.
-sprite: /images/platformer/sprites/flying-ufo.png
-background: /images/platformer/backgrounds/alien_planet1.jpg
+sprite: images/platformer/sprites/flyinglabubu.png
+background: images/platformer/backgrounds/labubu.jpg
 permalink: /background
 ---
 
@@ -14,9 +14,10 @@ permalink: /background
   const ctx = canvas.getContext('2d');
   const backgroundImg = new Image();
   const spriteImg = new Image();
-  backgroundImg.src = '{{page.background}}';
-  spriteImg.src = '{{page.sprite}}';
+  backgroundImg.src = '{{page.background}}'; //Background Image
+  spriteImg.src = '{{page.sprite}}'; //Player Image
 
+//Track when both images finish loading
   let imagesLoaded = 0;
   backgroundImg.onload = function() {
     imagesLoaded++;
@@ -26,10 +27,13 @@ permalink: /background
     imagesLoaded++;
     startGameWorld();
   };
-
+/* This block Starts the Game
+ * It. checks for all images being loaded beofre placing it on the website
+*/
+// Core game logic
   function startGameWorld() {
-    if (imagesLoaded < 2) return;
-
+    if (imagesLoaded < 2) return; // Delays start until everything is laoded
+// Base class for anything drawn on the canvas
     class GameObject {
       constructor(image, width, height, x = 0, y = 0, speedRatio = 0) {
         this.image = image;
@@ -40,32 +44,33 @@ permalink: /background
         this.speedRatio = speedRatio;
         this.speed = GameWorld.gameSpeed * this.speedRatio;
       }
-      update() {}
+      update() {} //Empty by default, subclasses override
       draw(ctx) {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
       }
     }
-
+//Background object(scrolls horizontally forever)
     class Background extends GameObject {
       constructor(image, gameWorld) {
         // Fill entire canvas
         super(image, gameWorld.width, gameWorld.height, 0, 0, 0.1);
       }
       update() {
-        this.x = (this.x - this.speed) % this.width;
+        this.x = (this.x - this.speed) % this.width; //Wrap Background
       }
       draw(ctx) {
+        //Draw two copies side by side so it loops seamlessly
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
       }
     }
-
+// Player object (bobs up and down on a sin wave)
     class Player extends GameObject {
       constructor(image, gameWorld) {
-        const width = image.naturalWidth / 2;
+        const width = image.naturalWidth / 2; //Scale down sprite
         const height = image.naturalHeight / 2;
-        const x = (gameWorld.width - width) / 2;
-        const y = (gameWorld.height - height) / 2;
+        const x = (gameWorld.width - width) / 2; //Center horizotally
+        const y = (gameWorld.height - height) / 2; // Center vertically
         super(image, width, height, x, y);
         this.baseY = y;
         this.frame = 0;
@@ -75,7 +80,7 @@ permalink: /background
         this.frame++;
       }
     }
-
+// Math and moving images
     class GameWorld {
       static gameSpeed = 5;
       constructor(backgroundImg, spriteImg) {

@@ -21,7 +21,7 @@ It felt like a mix between coding and note-taking, which made it really useful f
 ## Managing Files
 
 Another important skill was **file management**.  
-I worked with creating, renaming, and organizing files so that projects didn’t turn into a giant mess. It wasn’t just about dragging and dropping—it was about learning how the **command line** can control files, and how GitHub keeps track of all the changes. It’s like having a time machine for code.
+I worked with creating, renaming, and organizing files so that projects didn’t turn into a giant mess. It wasn’t just about dragging and dropping—it was about learning how the **command line** can control files, and how GitHub keeps track of all the changes. It’s like having a time machine for codes.
 
 ## GitHub Pages
 

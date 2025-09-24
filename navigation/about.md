@@ -8,7 +8,7 @@ permalink: /about/
 <div id="about-beach">
 
 
- <!-- SKY + SUN. -->
+ <!-- SKY + SUN.. -->
  <div class="sky"></div>
  <div class="sun"></div>
 

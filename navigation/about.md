@@ -13,7 +13,7 @@ permalink: /about/
  <div class="sun"></div>
 
 
- <!-- OCEAN -->
+ <!-- OCEAN .-->
  <div class="ocean">
    <div class="ocean-fill"></div>
    <div class="wave wave-a"></div>

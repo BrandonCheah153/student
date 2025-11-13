@@ -1,7 +1,7 @@
 ---
 layout: post
-title: API-Create
-permalink: /api/create
+title: API read
+permalink: /api/read
 show_reading_time: false
 ---
 

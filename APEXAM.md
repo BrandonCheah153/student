@@ -486,7 +486,7 @@ btn.textContent = "Compose a Verse"
 document.getElementById("boot-msg").className = "hidden"
 </script>
 
-<!-- JS handles only UI sugar — zero poem logic here -->
+<!-- JS ONLY UI, NO Python-->
 <script>
   document.getElementById("lines").addEventListener("input", function () {
     document.getElementById("lines-num").textContent = this.value;

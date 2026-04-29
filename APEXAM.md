@@ -14,6 +14,7 @@ permalink: /APCSP
 <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
 <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 
+
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
 
@@ -306,32 +307,12 @@ permalink: /APCSP
 </div>
 
 <script type="py">
-# =============================================================================
-# THE VERSE ENGINE — AP CSP Create Performance Task
-# Student-developed program code
-# =============================================================================
-# PROGRAM PURPOSE:
-#   This program generates original poems based on user-selected theme, mood,
-#   structure, and line count. The user interacts through dropdown menus and
-#   a slider (USER INPUT), and the finished poem is displayed on screen (OUTPUT).
-# =============================================================================
-
 import random
 from pyscript import document
 from pyodide.ffi import create_proxy
 
-
-# =============================================================================
-# SECTION 1 — DATA (Lists used as collections to manage program complexity)
-# =============================================================================
-# WORD_BANKS is a dictionary whose values are LISTS of strings.
-# Using lists here manages complexity: instead of hundreds of individual
-# variables, one organised structure holds all vocabulary for every theme.
-# The program indexes into these lists throughout poem generation.
-# =============================================================================
-
+# word banks for each theme, stored as lists
 WORD_BANKS = {
-    # Each theme maps to a dict of three lists: nouns, verbs, adjectives.
     "nature": {
         "nouns":      ["forest", "petal", "root", "branch", "fog",
                        "dusk", "thorn", "seed", "ash", "bloom"],
@@ -374,9 +355,7 @@ WORD_BANKS = {
     }
 }
 
-# MOOD_ADVERBS — list of adverbs matched to each mood.
-# Stored as a list so the program can randomly select from them,
-# giving each generated poem a different emotional texture.
+# adverbs and openers matched to each mood
 MOOD_ADVERBS = {
     "melancholy": ["quietly", "slowly", "gently", "softly", "barely"],
     "joyful":     ["brightly", "freely", "warmly", "lightly", "easily"],
@@ -385,9 +364,6 @@ MOOD_ADVERBS = {
     "angry":      ["fiercely", "harshly", "blindly", "deeply", "heavily"]
 }
 
-# MOOD_OPENERS — list of opening phrases per mood.
-# The first line of every poem is chosen from this list,
-# ensuring the poem opens with the correct emotional register.
 MOOD_OPENERS = {
     "melancholy": ["Even now,", "Somewhere,", "In the end,", "Once,", "Still,", "Perhaps,"],
     "joyful":     ["Look —", "Here,", "Yes,", "Today,", "Now,", "Again,"],
@@ -396,111 +372,30 @@ MOOD_OPENERS = {
     "angry":      ["No more —", "Tell me:", "How long", "Still —", "Even now", "Don't say"]
 }
 
-# ANAPHORA_ANCHORS — list of repeating anchor phrases for the anaphora structure.
-# Each line in an anaphora poem starts with the next item from this list,
-# cycling through it with the modulo operator inside the loop.
+# anchor phrases that repeat at the start of each line in anaphora mode
 ANAPHORA_ANCHORS = ["I remember", "There is", "We carry", "It was", "You left", "I find"]
 
 
-# =============================================================================
-# SECTION 2 — STUDENT-DEVELOPED PROCEDURE
-# =============================================================================
-# PROCEDURE NAME : generate_poem
-# PARAMETERS     : theme     (str) — which word bank to draw from
-#                  mood      (str) — which adverbs/openers to use
-#                  num_lines (int) — how many lines to produce
-# RETURN VALUE   : a single string containing the finished poem
-#
-# This procedure contains the three required algorithmic components:
-#   • SEQUENCING  — statements execute top-to-bottom in a defined order
-#   • SELECTION   — if/elif/else decides which line template to apply
-#   • ITERATION   — for-loop repeats the line-building process num_lines times
-# =============================================================================
-
+# builds and returns a poem based on the user's choices
 def generate_poem(theme, mood, num_lines):
-    """
-    Build and return a free-verse poem as a multi-line string.
+    bank    = WORD_BANKS[theme]
+    adverbs = MOOD_ADVERBS[mood]
+    opener  = random.choice(MOOD_OPENERS[mood])
 
-    Parameters
-    ----------
-    theme     : str  — one of "nature", "city", "space", "ocean", "time"
-    mood      : str  — one of "melancholy", "joyful", "tense", "dreamy", "angry"
-    num_lines : int  — number of lines to generate (3–12, chosen by user slider)
+    poem_lines = []  # list to store each line as it's built
 
-    Returns
-    -------
-    str  — the complete poem with lines joined by newline characters
-    """
+    for i in range(num_lines):  # loop runs once per line
+        noun  = random.choice(bank["nouns"])
+        verb  = random.choice(bank["verbs"])
+        adj   = random.choice(bank["adjectives"])
+        adv   = random.choice(adverbs)
+        noun2 = random.choice(bank["nouns"])
 
-    # ------------------------------------------------------------------
-    # SEQUENCING (step 1 of 4): Look up the correct word lists.
-    # These two statements must run before the loop — they set up the
-    # data that every iteration will pull words from.
-    # ------------------------------------------------------------------
-    bank    = WORD_BANKS[theme]      # dict containing three lists: nouns, verbs, adjectives
-    adverbs = MOOD_ADVERBS[mood]     # list of adverbs that match the selected mood
-
-    # ------------------------------------------------------------------
-    # SEQUENCING (step 2 of 4): Choose one opening phrase for line 0.
-    # random.choice picks one element at random from the list.
-    # ------------------------------------------------------------------
-    opener = random.choice(MOOD_OPENERS[mood])
-
-    # ------------------------------------------------------------------
-    # SEQUENCING (step 3 of 4): Initialise the output list.
-    # 'poem_lines' is a LIST that stores each generated line (string).
-    # Using a list manages program complexity: rather than building a
-    # single giant string by concatenation, we collect lines individually
-    # and join them at the end. This also lets us inspect or modify any
-    # individual line by index if needed.
-    # ------------------------------------------------------------------
-    poem_lines = []    # LIST — will hold one string per poem line
-
-    # ------------------------------------------------------------------
-    # ITERATION: Repeat the line-building block num_lines times.
-    # 'i' tracks which line we are currently writing (0-indexed).
-    # Without this loop the procedure could only ever produce one line,
-    # so iteration is essential to the program's purpose.
-    # ------------------------------------------------------------------
-    for i in range(num_lines):
-
-        # Randomly sample one word from each vocabulary list.
-        # These four statements are SEQUENCED — each must complete
-        # before the next assignment can use its own random draw.
-        noun  = random.choice(bank["nouns"])        # one noun  from the theme's noun  list
-        verb  = random.choice(bank["verbs"])        # one verb  from the theme's verb  list
-        adj   = random.choice(bank["adjectives"])   # one adj   from the theme's adj   list
-        adv   = random.choice(adverbs)              # one adverb from the mood's adverb list
-        noun2 = random.choice(bank["nouns"])        # second noun for variety in mid-line templates
-
-        # --------------------------------------------------------------
-        # SELECTION: Choose the correct line template based on position.
-        #
-        #   Branch 1 (if)   — first line  (i == 0)
-        #                     Uses the mood opener so the poem begins
-        #                     with the right emotional register.
-        #
-        #   Branch 2 (elif) — last line   (i == num_lines - 1)
-        #                     Ends with a period to close the poem.
-        #
-        #   Branch 3 (else) — every middle line
-        #                     Picks randomly from five templates so the
-        #                     interior of the poem stays varied.
-        #
-        # Only one branch executes per iteration — that is what makes
-        # this a selection (decision) rather than sequencing.
-        # --------------------------------------------------------------
-
-        if i == 0:
-            # SELECTION — Branch 1: opening line with mood-specific opener
+        if i == 0:  # first line uses the mood opener
             line = f"{opener} the {adj} {noun} {verb} {adv}"
-
-        elif i == num_lines - 1:
-            # SELECTION — Branch 2: closing line ends the poem with a full stop
+        elif i == num_lines - 1:  # last line ends with a period
             line = f"and the {adj} {noun} {verb}."
-
-        else:
-            # SELECTION — Branch 3: middle lines vary across five templates
+        else:  # middle lines pick randomly from five templates
             middle_templates = [
                 f"the {adj} {noun} {verb} {adv}",
                 f"{adv}, the {noun} {verb}",
@@ -508,144 +403,76 @@ def generate_poem(theme, mood, num_lines):
                 f"{noun} {verb} like {adj} {noun2}",
                 f"the {noun} that {verb} {adv}"
             ]
-            line = random.choice(middle_templates)   # randomly pick one template
+            line = random.choice(middle_templates)
 
-        # --------------------------------------------------------------
-        # SEQUENCING (step 4 of 4, inside loop):
-        # Append the finished line to the output list.
-        # This must come after the selection block so that 'line' is
-        # fully built before it is stored.
-        # --------------------------------------------------------------
-        poem_lines.append(line)    # add this line to the LIST
+        poem_lines.append(line)  # add finished line to the list
 
-    # After all iterations: join every element of the list with newlines
-    # and return the complete poem string to the caller.
-    return "\n".join(poem_lines)
+    return "\n".join(poem_lines)  # join all lines into one string
 
 
-# =============================================================================
-# SECTION 3 — SUPPORTING PROCEDURES
-# (also student-developed; each calls the same list-based word banks above)
-# =============================================================================
-
+# generates a 3-line haiku
 def generate_haiku(theme, mood):
-    """
-    Return a three-line haiku string.
-    Parameters: theme (str), mood (str)
-    Returns   : str
-    """
-    bank    = WORD_BANKS[theme]           # SELECTION — pick correct word bank list
-    adverbs = MOOD_ADVERBS[mood]          # SELECTION — pick correct mood adverb list
-
-    # Build exactly three lines as a list, then join — same list pattern as above
+    bank    = WORD_BANKS[theme]
+    adverbs = MOOD_ADVERBS[mood]
     haiku_lines = [
         f"{random.choice(bank['adjectives'])} {random.choice(bank['nouns'])} drifts",
         f"{random.choice(adverbs)}, the {random.choice(bank['nouns'])} {random.choice(bank['verbs'])}",
         f"only {random.choice(bank['nouns'])} remains"
     ]
-    return "\n".join(haiku_lines)    # return the joined string
+    return "\n".join(haiku_lines)
 
 
+# generates a poem with blank lines between every pair (couplets)
 def generate_couplets(theme, mood, num_lines):
-    """
-    Return a poem arranged in rhyming-style couplets (blank line every two lines).
-    Parameters: theme (str), mood (str), num_lines (int)
-    Returns   : str
-    """
     bank    = WORD_BANKS[theme]
     adverbs = MOOD_ADVERBS[mood]
-    couplet_lines = []    # LIST — collects each line and blank-line separator
-
-    # ITERATION — build num_lines lines, inserting a blank line after every pair
+    couplet_lines = []
     for i in range(num_lines):
         noun = random.choice(bank["nouns"])
         verb = random.choice(bank["verbs"])
         adj  = random.choice(bank["adjectives"])
         adv  = random.choice(adverbs)
         couplet_lines.append(f"the {adj} {noun} {verb} {adv}")
-
-        # SELECTION — insert blank line after even-indexed lines (every couplet)
-        # but not after the very last line
-        if i % 2 == 1 and i != num_lines - 1:
-            couplet_lines.append("")    # blank line separates couplet pairs
-
+        if i % 2 == 1 and i != num_lines - 1:  # blank line after every two lines
+            couplet_lines.append("")
     return "\n".join(couplet_lines)
 
 
+# generates a poem where every line starts with a repeating phrase
 def generate_anaphora(theme, mood, num_lines):
-    """
-    Return a poem where each line starts with a repeating anchor phrase.
-    Parameters: theme (str), mood (str), num_lines (int)
-    Returns   : str
-    """
     bank           = WORD_BANKS[theme]
-    anaphora_lines = []    # LIST — stores each anaphora line
-
-    # ITERATION — build num_lines lines, cycling through ANAPHORA_ANCHORS list
+    anaphora_lines = []
     for i in range(num_lines):
-        # SELECTION — cycle through the ANAPHORA_ANCHORS list using modulo
-        # so we never go out of bounds, regardless of num_lines
-        anchor = ANAPHORA_ANCHORS[i % len(ANAPHORA_ANCHORS)]
+        anchor = ANAPHORA_ANCHORS[i % len(ANAPHORA_ANCHORS)]  # cycles through the anchors list
         adj    = random.choice(bank["adjectives"])
         noun   = random.choice(bank["nouns"])
         anaphora_lines.append(f"{anchor} the {adj} {noun}")
-
     return "\n".join(anaphora_lines)
 
 
-# =============================================================================
-# SECTION 4 — USER INPUT & OUTPUT
-# =============================================================================
-# INPUT  : The user clicks "Compose a Verse" after choosing theme, mood,
-#          structure, and line count from the HTML controls. The on_compose
-#          function reads those selections with getElementById().
-#
-# OUTPUT : The finished poem string is written to the #poem-output element,
-#          making it visible on the page (visual output to the user).
-# =============================================================================
-
+# reads user input and calls the right procedure based on structure choice
 def on_compose(event):
-    """
-    Event handler — called when the user clicks the Compose button (USER INPUT).
-    Reads all four user selections, calls the appropriate student-developed
-    procedure, then writes the result to the page (OUTPUT).
-    """
+    theme     = document.getElementById("theme").value
+    mood      = document.getElementById("mood").value
+    structure = document.getElementById("structure").value
+    num_lines = int(document.getElementById("lines").value)
 
-    # ── READ USER INPUT ──────────────────────────────────────────────
-    # Each getElementById call reads a value the user chose from a
-    # dropdown or slider — this is the program's primary input source.
-    theme     = document.getElementById("theme").value       # user-selected theme
-    mood      = document.getElementById("mood").value        # user-selected mood
-    structure = document.getElementById("structure").value   # user-selected structure
-    num_lines = int(document.getElementById("lines").value)  # user-selected line count (slider)
-
-    # ── SELECTION: call the right procedure based on structure choice ─
-    # Each branch calls a different student-developed procedure and
-    # stores the returned poem string in the local variable 'poem'.
     if structure == "haiku":
-        poem      = generate_haiku(theme, mood)    # CALL to student-developed procedure
-        num_lines = 3                              # haiku is always exactly 3 lines
-
+        poem      = generate_haiku(theme, mood)
+        num_lines = 3
     elif structure == "couplets":
-        poem = generate_couplets(theme, mood, num_lines)    # CALL to student-developed procedure
-
+        poem = generate_couplets(theme, mood, num_lines)
     elif structure == "anaphora":
-        poem = generate_anaphora(theme, mood, num_lines)    # CALL to student-developed procedure
-
+        poem = generate_anaphora(theme, mood, num_lines)
     else:
-        # Default: free verse — CALL to the primary student-developed procedure
-        poem = generate_poem(theme, mood, num_lines)        # CALL to student-developed procedure
+        poem = generate_poem(theme, mood, num_lines)
 
-    # ── WRITE OUTPUT ─────────────────────────────────────────────────
-    # Display the generated poem string to the user (VISUAL OUTPUT).
-    # The poem variable — returned by generate_poem — is placed directly
-    # into the DOM so the user can read it on screen.
+    # output the poem to the page
     out = document.getElementById("poem-output")
-    out.textContent = poem          # OUTPUT: write poem text to the page
+    out.textContent = poem
     out.className   = ""
-    out.className   = "show"        # trigger CSS reveal animation
+    out.className   = "show"
 
-    # Hide the placeholder and show the metadata + copy button
     document.getElementById("poem-placeholder").style.display = "none"
     document.getElementById("poem-meta").textContent = (
         f"{theme}  ·  {mood}  ·  {structure}  ·  {num_lines} lines"
@@ -653,16 +480,12 @@ def on_compose(event):
     document.getElementById("btn-copy").style.display = "inline-block"
 
 
-# =============================================================================
-# SECTION 5 — RUNTIME SETUP
-# Bind the button click to on_compose and signal that Python is ready.
-# =============================================================================
-
 btn = document.getElementById("btn-compose")
-btn.addEventListener("click", create_proxy(on_compose))   # wire button → handler
+btn.addEventListener("click", create_proxy(on_compose))
 btn.disabled    = False
 btn.textContent = "Compose a Verse"
 document.getElementById("boot-msg").className = "hidden"
+
 </script>
 
 <!-- JS — UI-only helpers, no Python logic -->

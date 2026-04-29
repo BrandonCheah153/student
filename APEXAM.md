@@ -310,7 +310,7 @@ permalink: /APCSP
 import random
 from pyscript import document
 from pyodide.ffi import create_proxy
-
+#CITATION: Used Claude AI to assist in creating styling (css)
 # word banks for each theme, stored as lists
 WORD_BANKS = {
     "nature": {
@@ -485,7 +485,7 @@ btn.addEventListener("click", create_proxy(on_compose))
 btn.disabled    = False
 btn.textContent = "Compose a Verse"
 document.getElementById("boot-msg").className = "hidden"
-
+#CITATION: Used Claude AI to assist in creating styling (css)
 </script>
 
 <!-- JS — UI-only helpers, no Python logic -->
